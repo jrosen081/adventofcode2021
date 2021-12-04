@@ -20,17 +20,9 @@
     (for/and ([row board])
       (boolean? (list-ref row column)))))
 
-; any-diagonal-won? : Board -> Boolean
-(define (any-diagonal-won? board)
-  (let ((size (length board)))
-    (or (for/and ([num size])
-          (boolean? (list-ref (list-ref board num) num)))
-        (for/and ([num size])
-          (boolean? (list-ref (list-ref board num) (- size 1 num)))))))
-
 ; board-won? : Board -> Boolean
 (define (board-won? b)
-  (or (any-columns-won? b) (any-diagonal-won? b) (any-rows-won? b)))
+  (or (any-columns-won? b) (any-rows-won? b)))
 
 ; get-sum : Board -> Int
 (define (get-sum b)
@@ -53,7 +45,6 @@
   (define non-finished-boards (filter (compose not board-won?) played-boards))
   (match (list finished-boards non-finished-boards)
     [(list (list board) '()) (* (get-sum board) (first loi))]
-    [(list this '()) (for/list ([board this]) (* (get-sum board) (first loi)))] ; A hack rn
     [_ (play-bingo-for-last non-finished-boards (rest loi))]))
 
 (define GUESSES '(93 49 16 88 4 92 23 38 44 98 97 8 5 69 41 70 19 11 29 40 90 43 79 96 68 10 31 35 34 32 0 67 83 33 2 76 24 87 99 77 82 66 12 15 28 59 64 95 91 71 62 22 53 46 39 81 75 86 74 56 50 18 17 73 13 54 60 48 21 51 52 55 85 80 30 36 47 3 26 57 84 25 63 27 37 94 7 45 58 9 78 65 72 6 14 61 20 1 42 89))
