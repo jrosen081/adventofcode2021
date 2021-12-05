@@ -2,12 +2,16 @@
 
 ; A Line is a (list (list Integer Integer) (list Integer Integer))
 
+; clamp : Integer Integer Integer -> Integer
+(define (clamp val low hi)
+  (max (min val hi) low))
+
 ; all-points: Line -> [List-of (list Integer Integer)]
 (define (all-points line)
   (match line
     [(list (list x1 y1) (list x2 y2))
-            (let ((y-delta (if (< y1 y2) 1 (if (= y1 y2) 0 -1)))
-                  (x-delta (if (< x1 x2) 1 (if (= x1 x2) 0 -1))))
+            (let ((y-delta (clamp (- y2 y1) -1 1))
+                  (x-delta (clamp (- x2 x1) -1 1)))
               (for/list ([step (max (add1 (* y-delta (- y2 y1)))
                                     (add1 (* x-delta (- x2 x1))))])
                 (list (+ x1 (* x-delta step)) (+ y1 (* y-delta step)))))]))
