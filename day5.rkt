@@ -6,15 +6,11 @@
 (define (all-points line)
   (match line
     [(list (list x1 y1) (list x2 y2))
-     (cond [(= x1 x2) (for/list ([y (range (min y1 y2) (add1 (max y1 y2)))])
-                        (list x1 y))]
-           [(= y1 y2) (for/list ([x (range (min x1 x2) (add1 (max x1 x2)))])
-                        (list x y1))]
-           [else
-            (let ((y-delta (if (< y1 y2) 1 -1))
-                  (x-delta (if (< x1 x2) 1 -1)))
-              (for/list ([step (add1 (* x-delta (- x2 x1)))])
-                (list (+ x1 (* x-delta step)) (+ y1 (* y-delta step)))))])]))
+            (let ((y-delta (if (< y1 y2) 1 (if (= y1 y2) 0 -1)))
+                  (x-delta (if (< x1 x2) 1 (if (= x1 x2) 0 -1))))
+              (for/list ([step (max (add1 (* y-delta (- y2 y1)))
+                                    (add1 (* x-delta (- x2 x1))))])
+                (list (+ x1 (* x-delta step)) (+ y1 (* y-delta step)))))]))
 
 ; is-horizontal-or-vertical?: Line -> Boolean
 (define (is-horizontal-or-vertical? l)
