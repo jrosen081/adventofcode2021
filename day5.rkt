@@ -21,9 +21,9 @@
   (match l
     [(list (list x1 y1) (list x2 y2)) (or (= x1 x2) (= y1 y2))]))
 
-; count-overlaps : [List-of Line] -> Integer
-(define (count-overlaps lol)
-  (define valid-points (filter is-horizontal-or-vertical? lol))
+; count-overlaps-helper : [List-of Line] [Line -> Boolean] -> Integer
+(define (count-overlaps-helper lol keep-if)
+  (define valid-points (filter keep-if lol))
   (define h (make-hash))
   (for* ([line valid-points]
          [point (all-points line)])
@@ -31,14 +31,13 @@
   (for/sum ([num (hash-values h)])
     (if (> num 1) 1 0)))
 
+; count-overlaps : [List-of Line] -> Integer
+(define (count-overlaps lol)
+  (count-overlaps-helper lol is-horizontal-or-vertical?))
+
 ; count-overlaps/diag : [List-of Line] -> Integer
 (define (count-overlaps/diag lol)
-  (define h (make-hash))
-  (for* ([line lol]
-         [point (all-points line)])
-    (hash-update! h point add1 0))
-  (for/sum ([num (hash-values h)])
-    (if (> num 1) 1 0)))
+  (count-overlaps-helper lol (λ (_) #t)))
 
 
 (define POINTS '(
