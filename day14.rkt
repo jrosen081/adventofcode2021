@@ -5,10 +5,8 @@
 ; update-cache : {X} [Hash X Nat] [Hash X Nat] -> [Hash X Nat]
 (define (update-cache h1 h2)
   (for/fold ([prev h1])
-            ([key-val (hash->list h2)])
+            ([(key val) h2])
     (begin
-      (define key (car key-val))
-      (define val (cdr key-val))
       (hash-update prev
                    key
                    (lambda (x) (+ x val))
